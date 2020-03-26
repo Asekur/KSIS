@@ -1,0 +1,7 @@
+D:\Для учебы\КСИС\Traceroute\Traceroute\bin\Debug\Traceroute.exe.config
+D:\Для учебы\КСИС\Traceroute\Traceroute\bin\Debug\Traceroute.exe
+D:\Для учебы\КСИС\Traceroute\Traceroute\bin\Debug\Traceroute.pdb
+D:\Для учебы\КСИС\Traceroute\Traceroute\obj\Debug\Traceroute.csprojAssemblyReference.cache
+D:\Для учебы\КСИС\Traceroute\Traceroute\obj\Debug\Traceroute.csproj.CoreCompileInputs.cache
+D:\Для учебы\КСИС\Traceroute\Traceroute\obj\Debug\Traceroute.exe
+D:\Для учебы\КСИС\Traceroute\Traceroute\obj\Debug\Traceroute.pdb
