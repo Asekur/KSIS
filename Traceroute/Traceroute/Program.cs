@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Diagnostics;
 
 namespace Traceroute
 {
@@ -37,6 +38,7 @@ namespace Traceroute
                 {
                     //Assign ttl for socket
                     socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.IpTimeToLive, i + 1);
+                    Console.WriteLine();
                     Console.Write("{0:d2}    ", i + 1);
                     string transitHost = null;
                     int routerUnresponding = 0;
@@ -46,14 +48,16 @@ namespace Traceroute
                     {
 
                         //Time for package arrival
-                        DateTime timeStart = DateTime.Now;
+                        Stopwatch timeStart = new Stopwatch();
+                        timeStart.Start();
                         //Sending bytes on IP address
-                        socket.SendTo(packet.getBytesOfPackage(), SocketFlags.None, iep);
+                        socket.SendTo(packet.GetBytesOfPackage(), SocketFlags.None, iep);
                         try
                         {
                             //"ref" - transfer by reference (without changing the variable)
                             receivedSize = socket.ReceiveFrom(receivedData, ref ep);
-                            TimeSpan time = DateTime.Now - timeStart;
+                            timeStart.Stop();
+                            TimeSpan time = timeStart.Elapsed;
 
                             //ICMP package reply
                             ICMP response = new ICMP(receivedData, receivedSize);
@@ -85,7 +89,7 @@ namespace Traceroute
                             routerUnresponding++;
                             if (routerUnresponding == 3)
                             {
-                                Console.WriteLine("Request tined out.");
+                                Console.WriteLine("Request timed out.");
                             }
                             if (k == 2 && i == 29)
                             {
@@ -126,6 +130,7 @@ namespace Traceroute
                                 Console.WriteLine();
                             }
                         }
+                        Console.WriteLine();
                         Console.WriteLine("Traceroute completed.");
                         break;
                     }
@@ -165,7 +170,7 @@ namespace Traceroute
             DataSize = (UInt32)data.Length;
             Data = new byte[DataSize];
             Buffer.BlockCopy(data, 0, Data, 0, data.Length);
-            Checksum = getChecksum();
+            Checksum = GetChecksum();
         }
 
 
@@ -180,7 +185,7 @@ namespace Traceroute
             Buffer.BlockCopy(receivedPacket, 24, Data, 0, (int)DataSize);
         }
 
-        public byte[] getBytesOfPackage()
+        public byte[] GetBytesOfPackage()
         {
             byte[] data = new byte[DataSize + 4];
             Buffer.BlockCopy(BitConverter.GetBytes(Type), 0, data, 0, 1);
@@ -190,12 +195,12 @@ namespace Traceroute
             return data;
         }
 
-        public UInt16 getChecksum()
+        public UInt16 GetChecksum()
         {
             UInt32 checkSum = 0;
 
             //Data = array of ICMP package as bytes
-            byte[] data = getBytesOfPackage();
+            byte[] data = GetBytesOfPackage();
             int packagesize = (int)DataSize + 4;
             int indexOfBytes = 0;
             while (indexOfBytes < packagesize)
